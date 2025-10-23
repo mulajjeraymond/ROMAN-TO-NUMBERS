@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Roman Numeral Converter (Two-Way)</title>
+<style>
+  body {
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #0d6efd, #6610f2);
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    margin: 0;
+  }
+  .container {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 30px;
+    border-radius: 20px;
+    box-shadow: 0 0 15px rgba(0,0,0,0.3);
+    text-align: center;
+    width: 340px;
+  }
+  h1 {
+    margin-bottom: 25px;
+  }
+  input {
+    width: 100%;
+    padding: 10px;
+    font-size: 18px;
+    border-radius: 10px;
+    border: none;
+    text-align: center;
+    margin-bottom: 15px;
+  }
+  .buttons {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+  }
+  button {
+    width: 31%;
+    padding: 10px;
+    font-size: 16px;
+    border: none;
+    background: #ffc107;
+    color: #000;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: 0.3s;
+    margin-top: 5px;
+  }
+  button:hover {
+    background: #ffca2c;
+  }
+  #result {
+    margin-top: 20px;
+    font-size: 22px;
+    font-weight: bold;
+    color: #fff;
+    min-height: 28px;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <h1>Roman Numeral Converter</h1>
+  <input type="text" id="userInput" placeholder="Enter number or Roman numeral">
+  
+  <div class="buttons">
+    <button onclick="convertToRoman()">To Roman</button>
+    <button onclick="convertToNumber()">To Number</button>
+    <button onclick="resetFields()">Refresh</button>
+  </div>
+
+  <div id="result"></div>
+</div>
+
+<script>
+  // Convert Number → Roman
+  function convertToRoman() {
+    let num = parseInt(document.getElementById('userInput').value);
+    const val = [1000,900,500,400,100,90,50,40,10,9,5,4,1];
+    const syms = ["M","CM","D","CD","C","XC","L","XL","X","IX","V","IV","I"];
+    let roman = "";
+
+    if (isNaN(num) || num < 1 || num > 3999) {
+      document.getElementById("result").innerHTML = "⚠️ Please enter a valid number (1–3999).";
+      return;
+    }
+
+    for (let i = 0; i < val.length; i++) {
+      while (num >= val[i]) {
+        roman += syms[i];
+        num -= val[i];
+      }
+    }
+    document.getElementById("result").innerHTML = `Roman Numeral: <span style="color:#ffc107">${roman}</span>`;
+  }
+
+  // Convert Roman → Number
+  function convertToNumber() {
+    let roman = document.getElementById('userInput').value.toUpperCase().trim();
+    const romanMap = {I:1, V:5, X:10, L:50, C:100, D:500, M:1000};
+    let total = 0;
+
+    if (!/^[IVXLCDM]+$/i.test(roman)) {
+      document.getElementById("result").innerHTML = "⚠️ Please enter a valid Roman numeral.";
+      return;
+    }
+
+    for (let i = 0; i < roman.length; i++) {
+      let current = romanMap[roman[i]];
+      let next = romanMap[roman[i + 1]];
+      if (next && current < next) {
+        total -= current;
+      } else {
+        total += current;
+      }
+    }
+    document.getElementById("result").innerHTML = `Number: <span style="color:#ffc107">${total}</span>`;
+  }
+
+  // Refresh/Reset function
+  function resetFields() {
+    document.getElementById('userInput').value = "";
+    document.getElementById('result').innerHTML = "";
+  }
+</script>
+
+</body>
+</html>
